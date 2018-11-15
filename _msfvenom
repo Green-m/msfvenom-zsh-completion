@@ -49,74 +49,72 @@ _msfvenom() {
 
 	_arguments  -C \
   '(-h --help)'{-h,--help}'[show help]' \
-  '(-l --list)'{-l,--list}'[List all modules for type. Types are: payloads, encoders, nops, platforms, archs, encrypt, formats, all]:type list:->list' \
-  '(-p --payload)'{-p,--payload}'[Payload to use (--list payloads to list, --list-options for arguments). Specify - or STDIN for custom]:type payload:->payload' \
+  '(-l --list)'{-l,--list}'[List all modules for type. Types are: payloads, encoders, nops, platforms, archs, encrypt, formats, all]' \
+  '(-p --payload)'{-p,--payload}'[Payload to use (--list payloads to list, --list-options for arguments). Specify - or STDIN for custom]' \
   '(--list-options)--list-options[List --payload <value> standard, advanced and evasion options]' \
-  '(-f --format)'{-f,--format}'[Output format (use --list formats to list)]:type format:->format' \
-  '(-e --encoder)'{-e,--encoder}'[The encoder to use (use --list encoders to list)]:type encoder:->encoder' \
+  '(-f --format)'{-f,--format}'[Output format (use --list formats to list)]' \
+  '(-e --encoder)'{-e,--encoder}'[The encoder to use (use --list encoders to list)]' \
   '(--smallest)--smallest[Generate the smallest possible payload using all available encoders]' \
-  '(--encrypt)--encrypt[The type of encryption or encoding to apply to the shellcode (use --list encrypt to list)]:type encrypt:->encrypt' \
-  '(--encrypt-key)--encrypt-key[A key to be used for --encrypt]:type encryptkey:->encryptkey' \
-  '(--encrypt-iv)--encrypt-iv[An initialization vector for --encrypt]:type encryptiv:->encryptiv' \
-  '(-a --arch)'{-a,--arch}'[the architecture to use for --payload and --encoders (use --list archs to list)]:type arch:->arch' \
-  '(--platform)--platform[The platform for --payload (use --list platforms to list)]:type platform:->platform' \
-  '(-o --out)'{-o,--out}'[Save the payload to a file]:type file:->file' \
-  '(-b --bad-chars)'{-b,--bad-chars}'[Characters to avoid example: "\x00\xff"]:type chars:->chars' \
-  '(-n --nopsled)'{-n,--nopsled}'[Prepend a nopsled of \[length\] size on to the payload]:type nopsled:->nopsled' \
-  '(--encoder-space)--encoder-space[The maximum size of the encoded payload (defaults to the -s value)]:type space:->space' \
-  '(-i --iterations)'{-i,--iterations}'[The number of times to encode the payload]:type iterations:->iterations' \
-  '(-c --add-code)'{-c,--add-code}'[Specify an additional win32 shellcode file to include]:type addcode:->addcode' \
-  '(-x --template)'{-x,--template}'[Specify a custom executable file to use as a template]:type template:->template' \
+  '(--encrypt)--encrypt[The type of encryption or encoding to apply to the shellcode (use --list encrypt to list)]' \
+  '(--encrypt-key)--encrypt-key[A key to be used for --encrypt]' \
+  '(--encrypt-iv)--encrypt-iv[An initialization vector for --encrypt]' \
+  '(-a --arch)'{-a,--arch}'[the architecture to use for --payload and --encoders (use --list archs to list)]' \
+  '(--platform)--platform[The platform for --payload (use --list platforms to list)]' \
+  '(-o --out)'{-o,--out}'[Save the payload to a file]' \
+  '(-b --bad-chars)'{-b,--bad-chars}'[Characters to avoid example: "\x00\xff"]' \
+  '(-n --nopsled)'{-n,--nopsled}'[Prepend a nopsled of \[length\] size on to the payload]' \
+  '(--encoder-space)--encoder-space[The maximum size of the encoded payload (defaults to the -s value)]' \
+  '(-i --iterations)'{-i,--iterations}'[The number of times to encode the payload]' \
+  '(-c --add-code)'{-c,--add-code}'[Specify an additional win32 shellcode file to include]' \
+  '(-x --template)'{-x,--template}'[Specify a custom executable file to use as a template]' \
   '(-k --keep)'{-k,--keep}'[Preserve the --template behaviour and inject the payload as a new thread]' \
-  '(-v --var-name)'{-v,--var-name}'[Specify a custom variable name to use for certain output formats]:type varname:->varname' \
-  '(-t --timeout)'{-t,--timeout}'[The number of seconds to wait when reading the payload from STDIN (default 30, 0 to disable)]:type time:->time' \
-	'*:: :->args'  && ret=0 
+  '(-v --var-name)'{-v,--var-name}'[Specify a custom variable name to use for certain output formats]' \
+  '(-t --timeout)'{-t,--timeout}'[The number of seconds to wait when reading the payload from STDIN (default 30, 0 to disable)]' \
+  '*: :($(__msfvenom_options))' && ret=0
 
-	case "$state" in
-	  (payload)
+
+	lastword=${words[${#words[@]}-1]}
+
+	case "$lastword" in
+		(-p|--payload)
 		  _values 'payload' $(__msfvenom_payloads)
 	  ;;
 
-	  (list)
+	  (-l|--list)
 			local lists=('payloads' 'encoders' 'nops' 'platforms' 'archs' 'encrypt' 'formats' 'all')
 			_values 'list' $lists
 		;;
 
-		(encrypt)
+		(-encrypt)
 			local encrypts=('aes256' 'base64' 'rc4' 'xor')
 			_values 'encrypt' $encrypts
 		;;
 
-		(arch)
+		(-a|--arch)
 			_values 'arch' $(__msfvenom_archs)
 		;;
 
-		(platform)
+		(-platform)
 			_values 'platform' $(__msfvenom_platforms)
 		;;
 
-		(format)
+		(-f|--format)
 			_values 'format' $(__msfvenom_formats)
 		;;
 
-		(encoder)
+		(-e|--encoder)
 			_values 'encoder' $(__msfvenom_encoders)
 		;;
 
-		(file|template|addcode)
+		(-o|--out|-x|--template|-c|--add-code)
 			_files
 		;;
 
-		(encryptkey|encryptiv|chars|nopsled|space|iterations|varname|time)
-
-		;;
-
 		(*)
-			compadd $(__msfvenom_options)
+
 		;;
 
 	esac
-
 }
 
 
@@ -331,44 +329,44 @@ __msfvenom_formats(){
 __msfvenom_options(){
 	local options 
 	options=(
-		'LHOST='
-		'LPORT='
-		'EXITFUNC='
-		'RHOST='
-		'StageEncoder='
-		'AutoLoadStdapi='
-		'AutoRunScript='
-		'AutoSystemInfo='
-		'AutoVerifySession='
-		'AutoVerifySessionTimeout='
-		'EnableStageEncoding='
-		'EnableUnicodeEncoding='
-		'HandlerSSLCert='
-		'InitialAutoRunScript='
-		'PayloadBindPort='
-		'PayloadProcessCommandLine='
-		'PayloadUUIDName='
-		'PayloadUUIDRaw='
-		'PayloadUUIDSeed='
-		'PayloadUUIDTracking='
-		'PrependMigrate='
-		'PrependMigrateProc='
-		'ReverseAllowProxy='
-		'ReverseListenerBindAddress='
-		'ReverseListenerBindPort='
-		'ReverseListenerComm='
-		'ReverseListenerThreaded='
-		'SessionCommunicationTimeout='
-		'SessionExpirationTimeout='
-		'SessionRetryTotal='
-		'SessionRetryWait='
-		'StageEncoder='
-		'StageEncoderSaveRegisters='
-		'StageEncodingFallback='
-		'StagerRetryCount='
-		'StagerRetryWait='
-		'VERBOSE='
-		'WORKSPACE='
+ 		LHOST= \
+		LPORT= \
+		EXITFUNC= \
+		RHOST= \
+		StageEncoder= \
+		AutoLoadStdapi= \
+		AutoRunScript= \
+		AutoSystemInfo= \
+		AutoVerifySession= \
+		AutoVerifySessionTimeout= \
+		EnableStageEncoding= \
+		EnableUnicodeEncoding= \
+		HandlerSSLCert= \
+		InitialAutoRunScript= \
+		PayloadBindPort= \
+		PayloadProcessCommandLine= \
+		PayloadUUIDName= \
+		PayloadUUIDRaw= \
+		PayloadUUIDSeed= \
+		PayloadUUIDTracking= \
+		PrependMigrate= \
+		PrependMigrateProc= \
+		ReverseAllowProxy= \
+		ReverseListenerBindAddress= \
+		ReverseListenerBindPort= \
+		ReverseListenerComm= \
+		ReverseListenerThreaded= \
+		SessionCommunicationTimeout= \
+		SessionExpirationTimeout= \
+		SessionRetryTotal= \
+		SessionRetryWait= \
+		StageEncoder= \
+		StageEncoderSaveRegisters= \
+		StageEncodingFallback= \
+		StagerRetryCount= \
+		StagerRetryWait= \
+		VERBOSE= \
+		WORKSPACE=
 	)
 
  echo $options
