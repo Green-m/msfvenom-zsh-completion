@@ -1,4 +1,4 @@
-# msfvenom completion plugin with oh-my-zsh
+# msfvenom zsh completion  
 
 ## install 
 
