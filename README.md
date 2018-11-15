@@ -5,15 +5,11 @@
 ```
 # You have to install oh-my-zsh first.
 
-# Create a new directory for msfvenom plugin.
-mkdir -p ~/.oh-my-zsh/custom/plugins/msfvenom/
-cd ~/.oh-my-zsh/custom/plugins/msfvenom/
-wget https://raw.githubusercontent.com/Green-m/msfvenom-zsh-completion/master/msfvenom.plugin.zsh
-# Open your ~/.zshrc file and add msfvenom plugin like below
-# plugins=(
-#  git 
-#  msfvenom
-# )
+# Download the msfvenom plugin.
+git clone https://github.com/Green-m/msfvenom-zsh-completion ~/.oh-my-zsh/custom/plugins/msfvenom/
+
+# Open your ~/.zshrc file and enable msfvenom plugin like below
+# plugins=(...  msfvenom)
 source ~/.zshrc
 ```
 
