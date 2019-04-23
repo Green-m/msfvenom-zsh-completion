@@ -16,3 +16,7 @@ git clone https://github.com/Green-m/msfvenom-zsh-completion ~/.oh-my-zsh/custom
 source ~/.zshrc
 ```
 
+## bug
+
+If you get stuck into troubles when using it, run `compinit` to reinitialize the zsh completion environment, reference [here](https://github.com/andsens/homeshick/issues/89).
+
