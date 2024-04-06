@@ -37,7 +37,7 @@ venom-cache-payloads() {
 
   if [[ ! -f $VENOM_CACHE_FILE ]]; then
       echo -n "(...caching Metasploit Payloads...)"
-      $VENOM --list payload|grep -e "^.*\/" | awk '{print $1}' >> $VENOM_CACHE_FILE
+      $VENOM --list payload|grep -e "^.*/" | awk '{print $1}' >> $VENOM_CACHE_FILE
   fi
 }
 
