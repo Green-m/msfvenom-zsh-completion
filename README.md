@@ -14,6 +14,9 @@ git clone https://github.com/Green-m/msfvenom-zsh-completion ~/.oh-my-zsh/custom
 # plugins=(...  msfvenom)
 
 source ~/.zshrc
+
+# Flush the cache
+msfvenom-recache
 ```
 
 ## bug
